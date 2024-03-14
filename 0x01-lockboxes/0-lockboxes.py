@@ -1,36 +1,37 @@
 #!/usr/bin/python3
-
 """
-A function that determines if all the boxes can be opened.
+This function checks if all boxes can be opened.
 """
 
 
 def canUnlockAll(boxes):
     """
-    This function checks if all the locked boxed can be opened
+    Checks if all boxes can be opened
+    Params:
+        boxes(list): a list of lists, which represents the
+        boxes to be checked.
+    Returns:
+        Boolean: True if all boxes can be opened,
+        otherwise False
     """
-    x = len(boxes)
 
+    if not boxes:
+        return False
 
-    unlocked = [False] * x
-    unlocked[0] = True  
+    n = len(boxes)
 
+    checked_boxes = [False] * n
+    checked_boxes[0] = True
+    keys = set(boxes[0])
+    unchecked_boxes = [0]
 
-    keys_found = [0]
+    while (unchecked_boxes):
+        idx = unchecked_boxes.pop(0)
 
+        for key in boxes[idx]:
+            if 0 <= key < n and not checked_boxes[key]:
+                checked_boxes[key] = True
+                unchecked_boxes.append(key)
+                keys.update(boxes[key])
 
-    visited = set()
-    visited.add(0)
-
-    while keys_found:
-        current_key = keys_found.pop()
-
-
-        for key in boxes[current_key]:
-            if key not in visited:
-                visited.add(key)
-                unlocked[key] = True
-                keys_found.append(key)
-
-
-    return all(unlocked)
+    return (all(checked_boxes) or len(keys) == n)
