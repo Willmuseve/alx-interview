@@ -29,7 +29,7 @@ def validUTF8(data):
                 ))
                 if not all(next_body):
                     return (False)
-                skip = span - 1
+                y = span - 1
             else:
                 return (False)
         elif data[i] & 0b11110000 == 0b11100000:
@@ -42,7 +42,7 @@ def validUTF8(data):
                 ))
                 if not all(next_body):
                     return (False)
-                skip = span - 1
+                y = span - 1
             else:
                 return (False)
         elif data[i] & 0b11100000 == 0b11000000:
@@ -55,7 +55,7 @@ def validUTF8(data):
                 ))
                 if not all(next_body):
                     return (False)
-                skip = span - 1
+                y = span - 1
             else:
                 return (False)
         else:
