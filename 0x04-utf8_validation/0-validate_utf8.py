@@ -1,37 +1,63 @@
 #!/usr/bin/python3
-
 """
-Define a method that determines if a given
-data set represents a valid UTF-8 encoding
+A method that determines if a given data set represents a valid UTF-8 encoding.
 """
 
 
-from typing import List
-
-
-def validUTF8(data: List[int]) -> bool:
+def validUTF8(data):
     """
-    A function that takes a List of integers
-    and returns True if they rep a valid
-    UTF-8 encoding and False otherwise.
+    Function returns True if data is a valid UTF-8 encoding otherwise False
     """
-    data = iter(data)
-    for leading_byte in data:
-        leading_ones = count_leading_ones(leading_byte)
-        if leading_ones in [1, 7, 8]:
-            return False  # Illegal leading byte
-        for _ in range(leading_ones - 1):
-            trailing_byte = next(data, None)
-            if trailing_byte is None or trailing_byte >> 6 != 0b10:
-                return False  # Missing or illegal trailing byte
-    return True
+    y = 0
+    n = len(data)
 
-
-def count_leading_ones(byte):
-    """
-    Count the number of leading ones in a byte.
-    """
-    for i in range(8):
-        if byte >> (7 - i) == 0b11111111 >> (7 - i) & ~1:
-            return i
-    return 8
+    for i in range(n):
+        if y > 0:
+            y -= 1
+            continue
+        if type(data[i]) != int or data[i] < 0 or data[i] > 0x10ffff:
+            return (False)
+        elif data[i] <= 0x7f:
+            y = 0
+        elif data[i] & 0b11111000 == 0b11110000:
+            # 4-byte encoding
+            span = 4
+            if n - i >= span:
+                next_body = list(map(
+                    lambda x: x & 0b11000000 == 0b10000000,
+                    data[i + 1: i + span],
+                ))
+                if not all(next_body):
+                    return (False)
+                skip = span - 1
+            else:
+                return (False)
+        elif data[i] & 0b11110000 == 0b11100000:
+            # 3-byte encoding
+            span = 3
+            if n - i >= span:
+                next_body = list(map(
+                    lambda x: x & 0b11000000 == 0b10000000,
+                    data[i + 1: i + span],
+                ))
+                if not all(next_body):
+                    return (False)
+                skip = span - 1
+            else:
+                return (False)
+        elif data[i] & 0b11100000 == 0b11000000:
+            # 2-byte encoding
+            span = 2
+            if n - i >= span:
+                next_body = list(map(
+                    lambda x: x & 0b11000000 == 0b10000000,
+                    data[i + 1: i + span],
+                ))
+                if not all(next_body):
+                    return (False)
+                skip = span - 1
+            else:
+                return (False)
+        else:
+            return (False)
+    return (True)
