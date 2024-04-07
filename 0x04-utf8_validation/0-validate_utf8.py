@@ -15,8 +15,8 @@ def validUTF8(data: List[int]) -> bool:
     represent a valid UTF-8 encoding and False otherwise.
     """
     data = iter(data)
-    for l in data:
-        o = count_leading_ones(l)
+    for lam in data:
+        o = count_leading_ones(lam)
         if o in [1, 7, 8]:
             return False  # Illegal leading byte
         for _ in range(o - 1):
