@@ -10,18 +10,18 @@ from typing import List
 
 
 def validUTF8(data: List[int]) -> bool:
-    """takes a List of integers
-    and returns True if they rep a valid
-    UTF-8 encoding and False otherwise.
+    """
+    A function that takes a List of integers and returns True if they
+    represent a valid UTF-8 encoding and False otherwise.
     """
     data = iter(data)
-    for i in data:
-        x = count_leading_ones(leading_byte)
-        if x in [1, 7, 8]:
+    for l in data:
+        o = count_leading_ones(l)
+        if o in [1, 7, 8]:
             return False  # Illegal leading byte
-        for _ in range(x - 1):
-            b = next(data, None)
-            if b is None or b >> 6 != 0b10:
+        for _ in range(o - 1):
+            t = next(data, None)
+            if t is None or t >> 6 != 0b10:
                 return False  # Missing or illegal trailing byte
     return True
 
