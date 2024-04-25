@@ -9,16 +9,16 @@ def rotate_2d_matrix(matrix):
     """
     The actual fnction that rotates 2-d matrix.
     """
-    if x is None:
+    if matrix is None:
         return
 
-    y = len(x)
+    y = len(matrix)
 
     # Transpose the matrix
     for i in range(y):
         for j in range(i, y):
-            x[i][j], x[j][i] = x[j][i], x[i][j]
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
 
     # Reverse each row
-    for row in x:
+    for row in matrix:
         row.reverse()
