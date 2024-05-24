@@ -4,29 +4,31 @@
 
 def isWinner(x, nums):
     """
-    Function returns name of player that won the most rounds
+    Returns name of the winner
     """
-    if x < 1 or not nums:
-        return None
-    maria, ben_ = 0, 0
 
-    n = max(nums)  # generate primes with a limit of max num in nums
-    primes = [True for _ in range(1, n + 1, 1)]
-    primes[0] = False
-
-    for i, is_prime in enumerate(primes, 1):
-        if i == 1 or not is_prime:
-            continue
-        for j in range(i + i, n + 1, i):
-            primes[j - 1] = False
-    # filter number of primes less than n in nums for each round
-    for _, n in zip(range(x), nums):
-        primes_count = len(list(filter(lambda x: x, primes[0: n])))
-        ben += primes_count % 2 == 0
-        maria += primes_count % 2 == 1
-    if maria == ben:
+    if not nums or x < 1:
         return None
-    elif maria > ben:
-        return 'Maria'
+
+    max_num = max(nums)
+    is_prime = [True] * (max_num + 1)
+    is_prime[0] = is_prime[1] = False
+
+    for i in range(2, int(max_num**0.5) + 1):
+        if is_prime[i]:
+            for j in range(i * i, max_num + 1, i):
+                is_prime[j] = False
+
+    prime_indices = [i for i, value in enumerate(is_prime) if value]
+
+    maria_wins = sum(
+        1 for num in nums if num < len(prime_indices) \
+            and prime_indices[num] % 2 == 1
+    )
+
+    if maria_wins * 2 == len(nums):
+        return None
+    elif maria_wins * 2 > len(nums):
+        return "Maria"
     else:
-        return 'Ben'
+        return "Ben"
